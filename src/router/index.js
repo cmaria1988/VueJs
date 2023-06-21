@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory, createWebHistory } from "vue-router";
 import routes from "./route";
+import { useAuthStore } from "../stores/auth";
 
 const router =  createRouter({
     routes,
@@ -7,15 +8,19 @@ const router =  createRouter({
     //linkActiveClass: 'active'
 })
 
-router.beforeEach((to, from)=>{
-    if(to.meta.auth){
+router.beforeEach(async(to, from)=>{
+    const store = useAuthStore()
+    await store.fetchUser()
+    if(to.meta.auth && !store.isLoggedIn){
         return {
             name: "login",
             query:{
                 redirect:to.fullPath,
             }
         };
-    } 
+    } else if (to.meta.guest && store.isLoggedIn){
+        return {name:'tasks'}
+    }
 })
 
 export default router
