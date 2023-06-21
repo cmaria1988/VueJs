@@ -49,6 +49,4 @@ const completedTasksIsVisible = computed(()=> uncompletedTasks.value.length === 
 
 const showCompletedTask = ref(false)
 
-
-
 </script>
